@@ -11,6 +11,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import com.rjh.jwt.filter.Myfilter1;
 import com.rjh.jwt.filter.Myfilter3;
+import com.rjh.jwt.jwt.JwtAuthenticationfilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.addFilter(corsFilter) // @CrossOrigin 모델에 등록(인증없을때 ), 필터에 등록해주어야함 인증있을때사용 
 		.formLogin().disable()	//폼로그인 안씀 
 		.httpBasic().disable() // 
+		.addFilter(new JwtAuthenticationfilter(authenticationManager())) //AuthenticationManager파라미터를 넘겨주어야함 
 		.authorizeRequests()
 		.antMatchers("/api/v1/user/**")
 		.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
@@ -43,5 +45,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/api/v1/admin/**")
 		.access("hasRole('ROLE_ADMIN')")
 		.anyRequest().permitAll();
+		/* .formLogin().disable()했기때문에 밑에꺼가 동작하지 않음 
+		.and()
+		.formLogin()
+		.loginProcessingUrl("/login")
+		*/
 	}
 }
