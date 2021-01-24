@@ -27,7 +27,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		//http.addFilter(new Myfilter1()); //그냥 사용하면 오류가 발생함 securityFilter 시작전후에 걸어주어야함 
-		http.addFilterBefore(new Myfilter3(),  SecurityContextPersistenceFilter.class); //시큐리티가 동작하기전에 필터가 실행됨 
+		//http.addFilterBefore(new Myfilter3(),  SecurityContextPersistenceFilter.class); //시큐리티가 동작하기전에 필터가 실행됨 
 		//http.addFilterBefore(new Myfilter3(), BasicAuthenticationFilter.class); //어떤 시큐리티필터 전에 걸릴지 알아두어야함. 
 		//지금은 BasicAuthenticationFilter전에 하겠다 설정. 시큐리티필터체인이  다 실행되고 내가 직접만든 필터가 동작함 
 		http.csrf().disable();

@@ -24,5 +24,10 @@ public class JwtAuthenticationfilter extends UsernamePasswordAuthenticationFilte
 		System.out.println("JwtAuthenticationfilter: 로그인 시도");
 		return super.attemptAuthentication(request, response);
 	}
+	
+	//1. username, password를 받아서
+	//2. 정상인지 로그인 시도 authenticationManager로 로그인시도를 하면 principalDetailsService가 호출 loadUserByUsername이실행됨  
+	//3. PrincipalDetails를 세션에 담고 세션에 담지않으면 권한관리가 되지않음 
+	//4. JWT토큰을 만들어서 응답해주면됨. 
 
 }
