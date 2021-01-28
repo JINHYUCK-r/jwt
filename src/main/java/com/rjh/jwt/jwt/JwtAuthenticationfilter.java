@@ -2,6 +2,7 @@ package com.rjh.jwt.jwt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -14,6 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjh.jwt.auth.PrincipalDetails;
 import com.rjh.jwt.model.User;
@@ -77,8 +81,29 @@ public class JwtAuthenticationfilter extends UsernamePasswordAuthenticationFilte
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
+		//principalDetails 정보를 활용해서 JWT토큰을 만듦 
+		PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
 		System.out.println("successfulAuthentication  실행됨 : 인증이 완료 되었다는 뜻");
-		super.successfulAuthentication(request, response, chain, authResult);
+		
+		//RSA방식이 아닌 Hash암호방식 
+		String jwtToken = JWT.create()
+				.withSubject("rhj토큰") //토큰이름 
+				.withExpiresAt(new Date(System.currentTimeMillis()+(60000*10))) //토큰만료시간 (현재시간 + 원하는 만료시간(단위:1/1000초))
+				.withClaim("id", principalDetails.getUser().getId()) //비공개클레임. 내가 원하는 넣고싶은 키-밸류값을 넣을수 있음 
+				.withClaim("username", principalDetails.getUser().getUsername())
+				.sign(Algorithm.HMAC512("rjh")); //JwtProperties.SECRET 내 서버만 아는 고유한 값 
+		
+		response.addHeader("Authorization", "Bearer "+jwtToken); //사용자한테 키-밸류로 헤더에 담겨서 보내짐 
+		/*http://localhost:8080/login 에  post로 정보를 담아 로그인 시도를 해보면 header에 이렇게 정보가 담김 
+		Key: Authorization
+		Value: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.
+		eyJzdWIiOiJyaGrthqDtgbAiLCJpZCI6MSwiZXhwIjoxNjExODE1Njg0LCJ1c2VybmFtZSI6InRlc3QxIn0.
+		VNfgv9jideE7r-dy5E-ANzcd6oRxdZn8k5iOFDcpYrT0g0FBEDhg12auYmkv761gIsi9naVneX963WMC7yeIPA
+		 */
+		
+		/*유저네임, 패스워드 로그인 정상 -> JWT토큰을 생성 -> 클라이언트 쪽으로 JWT토큰을 응답
+		 *요청할때마다 JWT토큰을 가지고 요청 . 서버는 JWT토큰이 유효한지 판단하는 필터가 필요 
+		 */
 	}
 	
 
