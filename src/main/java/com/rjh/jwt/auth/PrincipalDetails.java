@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.rjh.jwt.model.User;
 
+import lombok.Data;
+
+@Data
 public class PrincipalDetails implements UserDetails{
 	
 	private User user;
@@ -15,6 +18,7 @@ public class PrincipalDetails implements UserDetails{
 	public PrincipalDetails(User user) {
 		this.user =user;
 	}
+	
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

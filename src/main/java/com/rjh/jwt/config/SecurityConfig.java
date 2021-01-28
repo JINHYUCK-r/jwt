@@ -1,10 +1,13 @@
 package com.rjh.jwt.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.web.filter.CorsFilter;
@@ -12,6 +15,7 @@ import org.springframework.web.filter.CorsFilter;
 import com.rjh.jwt.filter.Myfilter1;
 import com.rjh.jwt.filter.Myfilter3;
 import com.rjh.jwt.jwt.JwtAuthenticationfilter;
+import com.rjh.jwt.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +26,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	//빈으로 등록해놓았기 때문에 바로 불러올수 있음 
 	private final CorsFilter corsFilter;
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private CorsConfig corsConfig;
+	
+	 @Bean
+	    public BCryptPasswordEncoder passwordEncoder() {
+	        return new BCryptPasswordEncoder();
+	    }
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
