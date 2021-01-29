@@ -88,7 +88,7 @@ public class JwtAuthenticationfilter extends UsernamePasswordAuthenticationFilte
 		//RSA방식이 아닌 Hash암호방식 
 		String jwtToken = JWT.create()
 				.withSubject("rhj토큰") //토큰이름 
-				.withExpiresAt(new Date(System.currentTimeMillis()+(60000*10))) //토큰만료시간 (현재시간 + 원하는 만료시간(단위:1/1000초))
+				.withExpiresAt(new Date(System.currentTimeMillis()+(600000*10))) //토큰만료시간 (현재시간 + 원하는 만료시간(단위:1/1000초))
 				.withClaim("id", principalDetails.getUser().getId()) //비공개클레임. 내가 원하는 넣고싶은 키-밸류값을 넣을수 있음 
 				.withClaim("username", principalDetails.getUser().getUsername())
 				.sign(Algorithm.HMAC512("rjh")); //JwtProperties.SECRET 내 서버만 아는 고유한 값 

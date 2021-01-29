@@ -43,4 +43,23 @@ public class RestApiController {
 			return "회원가입완료";
 
 		}
+		
+		//user,manager,admin 접근가능 
+		@GetMapping("user")
+		public String user() {
+			return "user";
+		}
+		
+		//manager, admin
+		@GetMapping("manager")
+		public String manager() {
+			return "manager";
+		}
+		
+		//admin
+		@GetMapping("admin")
+		public String admin() {
+			return "admin";
+		}
+		
 }

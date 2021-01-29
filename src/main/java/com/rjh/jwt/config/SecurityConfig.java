@@ -15,6 +15,7 @@ import org.springframework.web.filter.CorsFilter;
 import com.rjh.jwt.filter.Myfilter1;
 import com.rjh.jwt.filter.Myfilter3;
 import com.rjh.jwt.jwt.JwtAuthenticationfilter;
+import com.rjh.jwt.jwt.JwtAuthorizationFilter;
 import com.rjh.jwt.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -52,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.formLogin().disable()	//폼로그인 안씀 
 		.httpBasic().disable() // 
 		.addFilter(new JwtAuthenticationfilter(authenticationManager())) //AuthenticationManager파라미터를 넘겨주어야함 
+		.addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
 		.authorizeRequests()
 		.antMatchers("/api/v1/user/**")
 		.access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
